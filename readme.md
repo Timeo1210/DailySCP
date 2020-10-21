@@ -1,6 +1,7 @@
 # Daily SCP
 This is a Twitter Bot (@ScpDaily) that Tweet on a daily basis a SCP story
 It will Tweet every day at 20.00pm a new SCP with her name, class, an image (if there is one) and the url of the wiki page.
+https://twitter.com/ScpDaily
 
 ## Necessary file (will be automatically created)
 generatedSCP.csv (%ROOT%/backup/generatedSCP.csv)

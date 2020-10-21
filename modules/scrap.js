@@ -1,27 +1,30 @@
 const puppeteer = require('puppeteer');
 
 async function scrapSCPfromURL(url) {
-    const browser = await puppeteer.launch({
-        executablePath: process.env.CHROME_EXECUTABLE_PATH
-    });
-    const {page, SCPContentDOM} = await getPageAndSCPContentDOM(browser, url);
+    try {
+        const browser = await puppeteer.launch({
+            executablePath: process.env.CHROME_EXECUTABLE_PATH
+        });
+        const {page, SCPContentDOM} = await getPageAndSCPContentDOM(browser, url);
+        
+        const [ SCPTitle, SCPClass, SCPImageURL ] = await Promise.all([
+            ScrapperAPI.getSCPTitle(browser, url),
+            ScrapperAPI.getSCPClass(page, SCPContentDOM),
+            ScrapperAPI.getSCPImageURL(page, SCPContentDOM)
+        ]);
     
-    const [ SCPTitle, SCPClass, SCPImageURL ] = await Promise.all([
-        ScrapperAPI.getSCPTitle(browser, url),
-        ScrapperAPI.getSCPClass(page, SCPContentDOM),
-        ScrapperAPI.getSCPImageURL(page, SCPContentDOM)
-    ])
-
-    const SCP = {
-        title: SCPTitle,
-        class: SCPClass,
-        imgURL: SCPImageURL,
-        url
+        const SCP = {
+            title: SCPTitle,
+            class: SCPClass,
+            imgURL: SCPImageURL,
+            url
+        };
+    
+        await browser.close();
+        return SCP;
+    } catch(e) {
+        console.error(e);
     }
-
-    await browser.close()
-    return SCP;
-
 }
 
 const ScrapperAPI = {
@@ -37,28 +40,28 @@ const ScrapperAPI = {
 
             return SCPTitle;
         } catch(e) {
-            return ""
+            return "";
         }
     },
     async getSCPClass(page, SCPContentDOM) {
         try {
             const classDOM = await SCPContentDOM.$('* > p:nth-of-type(2)');
-            const text = await page.evaluate(el => el.textContent, classDOM)
+            const text = await page.evaluate(el => el.textContent, classDOM);
             //                [ AFTER :        ]{SPACE}
-            const classText = text.split(":")[1].trim()
-            return classText
+            const classText = text.split(":")[1].trim();
+            return classText;
         } catch(e) {
-            return ""
+            return "";
         }
     },
     async getSCPImageURL(page, SCPContentDOM) {
         try {
-            const imageWrapperDOM = await SCPContentDOM.$('.scp-image-block')
-            const imageDOM = await imageWrapperDOM.$('img')
-            const url = await page.evaluate(img => img.getAttribute('src'), imageDOM)
+            const imageWrapperDOM = await SCPContentDOM.$('.scp-image-block');
+            const imageDOM = await imageWrapperDOM.$('img');
+            const url = await page.evaluate(img => img.getAttribute('src'), imageDOM);
             return url;
         } catch(e) {
-            return ""
+            return "";
         }
     }
 }
@@ -86,19 +89,19 @@ async function getTextLiFromListURL(page, listURL, SCPInt) {
         SCPInt = SCPInt - (Math.trunc(SCPInt/1000) * 1000);
     }
     await page.goto(listURL);
-    await page.waitForSelector('#page-content')
+    await page.waitForSelector('#page-content');
 
     const listSCPDOM = await page.$('#page-content > div');
 
     const ulList = Array.from(await listSCPDOM.$$('ul'));
     ulList.shift();
-    const ulIndex = Math.trunc(SCPInt/100)
-    SCPInt = SCPInt - (ulIndex * 100)
+    const ulIndex = Math.trunc(SCPInt/100);
+    SCPInt = SCPInt - (ulIndex * 100);
     const currentUlDOM = ulList[ulIndex];
 
     const liList = Array.from(await currentUlDOM.$$('li'));
     const liIndex = SCPInt;
-    const currentLiDOM = liList[liIndex]
+    const currentLiDOM = liList[liIndex];
     
     const textLi = await page.evaluate(el => el.textContent, currentLiDOM);
 
@@ -116,4 +119,4 @@ async function getPageAndSCPContentDOM(browser, url) {
 
 module.exports = {
     scrapSCPfromURL
-}
+};

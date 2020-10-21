@@ -23,13 +23,13 @@ async function postTweet(SCP) {
         };
         const finalAxiosConfig = buildAuthorizationOAuthFromAxiosObjectToAxiosObject(axiosConfig, true);
         
-        await axios(finalAxiosConfig)
+        await axios(finalAxiosConfig);
         
     } catch (e) {
-        console.error(e.response.status)
-        console.error(e.response.statusText)
-        console.error(e.request.path)
-        console.error(e.response.data)
+        console.error(e.response.status);
+        console.error(e.response.statusText);
+        console.error(e.request.path);
+        console.error(e.response.data);
     }
 }
 
@@ -62,7 +62,7 @@ async function postImage(imageBinPath) {
 }
 
 function customEncodeMethod(customString) {
-    return qs.stringify({value: customString}).split("=")[1]
+    return qs.stringify({value: customString}).split("=")[1];
 }
 
 function buildAuthorizationOAuthFromAxiosObjectToAxiosObject(axiosObject, parseData = false) {
@@ -72,20 +72,20 @@ function buildAuthorizationOAuthFromAxiosObjectToAxiosObject(axiosObject, parseD
     const queryParams = {
         ...axiosObject.params,
         ...OAuthParams
-    }
+    };
     if (parseData) Object.assign(queryParams, qs.parse(axiosObject.data));
 
     const encodedBaseURL = customEncodeMethod(baseURL);
     const encodedQueryParams = customEncodeMethod(encodeQueryParamsForOAuth(queryParams));
     
-    const signatureBaseString = `${method}&${encodedBaseURL}&${encodedQueryParams}`
+    const signatureBaseString = `${method}&${encodedBaseURL}&${encodedQueryParams}`;
     const signingKey = `${process.env.TWITTER_API_KEY_SECRET}&${process.env.TWITTER_API_ACCESS_TOKEN_SECRET}`;
 
     const signature = crypto
         .createHmac("sha1", signingKey)
         .update(signatureBaseString)
         .digest()
-        .toString('base64')
+        .toString('base64');
     
     const encodedSignature = customEncodeMethod(signature);
 
@@ -93,7 +93,7 @@ function buildAuthorizationOAuthFromAxiosObjectToAxiosObject(axiosObject, parseD
     axiosObject.headers = {
         ...axiosObject.headers,
         'Authorization': headerAuthorization
-    }
+    };
     return axiosObject;
 }
 
@@ -107,7 +107,7 @@ function getOAuthParams() {
         oauth_timestamp: timestamp,
         oauth_nonce: nonce,
         oauth_version: "1.0"
-    }
+    };
 }
 
 function encodeQueryParamsForOAuth(queryParams) {
@@ -119,9 +119,9 @@ function encodeQueryParamsForOAuth(queryParams) {
     let encodedQueryParams = '';
     for (k in ordered) {
         const encodedValue = customEncodeMethod(ordered[k]);
-        const encodedKey = customEncodeMethod(k)
+        const encodedKey = customEncodeMethod(k);
         if (encodedQueryParams === '') {
-            encodedQueryParams += `${encodedKey}=${encodedValue}`
+            encodedQueryParams += `${encodedKey}=${encodedValue}`;
         } else {
             encodedQueryParams += `&${encodedKey}=${encodedValue}`;
         }
@@ -133,4 +133,4 @@ function encodeQueryParamsForOAuth(queryParams) {
 module.exports = {
     postTweet,
     postImage
-}
+};

@@ -14,7 +14,7 @@ mongoose.connect(process.env.DATABASE_URL, {
 const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => {
-    console.log('Connected to database')
+    console.log('Connected to database');
     /*
     * DELETE DATABASE
     db.dropDatabase((err) => {
@@ -38,23 +38,23 @@ for (let i = 0; i < allDefaultPathKey.length; i++) {
 
 async function Main() {
     
-    console.log("---GET NEXTSCP---")
+    console.log("---GET SCP---");
     const SCPArray = FileAPI.readCSVToCSVArray(process.env.NEXTSCP_FILEPATH);
     const SCP = FileAPI.convertCSVArrayToCSVObject(SCPArray);
     
-    console.log("---TWEET NEXTSCP---")
-    await TwitterAPI.postTweet(SCP)
+    console.log("---TWEET SCP---");
+    await TwitterAPI.postTweet(SCP);
 
-    console.log("---SCRAP NEXTSCP---")
+    console.log("---SCRAP NEXTSCP---");
     const newSCP = await GenerateSCP.generateSCP();
     if (newSCP.imgURL === "BIN") {
-        console.log("---POST IMAGE ON TWITTER---")
+        console.log("---POST IMAGE ON TWITTER---");
         const newMediaId = await TwitterAPI.postImage(process.env.NEXTSCP_IMAGE_BIN_FILEPATH);
         newSCP.imgURL = newMediaId;
     }
     FileAPI.writeCSVFromCSVArray(process.env.NEXTSCP_FILEPATH, newSCP);
 
-    console.log("---END---")
+    console.log("---END---");
 }
 
 var mainWasExecuted = false;

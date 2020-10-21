@@ -5,8 +5,8 @@ const axios = require('axios').default;
 
 async function generateSCP() {
     let isSCPValid = false;
-    let SCP = {}
-    const backupFileStream = FileAPI.createWriteStreamFromFile(process.env.BACKUP_DATABASE_FILEPATH, "a")
+    let SCP = {};
+    const backupFileStream = FileAPI.createWriteStreamFromFile(process.env.BACKUP_DATABASE_FILEPATH, "a");
     while (isSCPValid === false) {
         const SCPNumber = await generateSCPNumber();
 
@@ -23,30 +23,30 @@ async function generateSCP() {
 
     // TO OPTIMISE
     if (SCP.imgURL.length > 1) {
-        SCP.imgURL = await getSCPImage(SCP.imgURL)
+        SCP.imgURL = await getSCPImage(SCP.imgURL);
     }
 
     return SCP;
 }
 
 function getTweetTextFromSCP(SCP) {
-    return `${SCP.title}\nClasse : ${SCP.class}\n${SCP.url}`
+    return `${SCP.title}\nClasse : ${SCP.class}\n${SCP.url}`;
 }
 
 async function getSCPImage(imgURL) {
     try {
         await downloadSCPImage(imgURL, process.env.NEXTSCP_IMAGE_FILEPATH);
         FileAPI.writeToFile(process.env.NEXTSCP_IMAGE_BIN_FILEPATH, FileAPI.readFromFile(process.env.NEXTSCP_IMAGE_FILEPATH));
-        return "BIN"
+        return "BIN";
     } catch (e) {
-        return ""
+        return "";
     }
 }
 
 function downloadSCPImage(SCPImageURL, writeFilePath) {
     return new Promise((resolve, reject) => {
         try {
-            const writeFileStream = FileAPI.createWriteStreamFromFile(writeFilePath)
+            const writeFileStream = FileAPI.createWriteStreamFromFile(writeFilePath);
             axios({
                 url: SCPImageURL,
                 responseType: 'stream'
@@ -54,12 +54,12 @@ function downloadSCPImage(SCPImageURL, writeFilePath) {
                 if (request.headers['content-type'] !== "text/html; charset=utf-8") {
                     request.data.pipe(writeFileStream)
                         .on("finish", () => resolve())
-                        .on("error", (e) => reject(e))
+                        .on("error", (e) => reject(e));
                 } else {
-                    reject()
+                    reject();
                 }
             }).catch((e) => {
-                reject(e)
+                reject(e);
             })
         } catch(e) {
             reject(e);
@@ -68,16 +68,20 @@ function downloadSCPImage(SCPImageURL, writeFilePath) {
 }
 
 async function generateSCPNumber() {
-    let newSCPNumber = null;
-    while (newSCPNumber === null) {
-        const randomNumber = Math.floor(Math.random() * (6000 - 2) + 2);
-        const randomStringNumber = convertNumberToSCPStringNumber(randomNumber);
-        const queryDatabase = await DatabaseAPI.getSCPFromNumber(randomStringNumber)
-        if (queryDatabase.length === 0) {
-            newSCPNumber = randomStringNumber;
+    try {
+        let newSCPNumber = null;
+        while (newSCPNumber === null) {
+            const randomNumber = Math.floor(Math.random() * (6000 - 2) + 2);
+            const randomStringNumber = convertNumberToSCPStringNumber(randomNumber);
+            const queryDatabase = await DatabaseAPI.getSCPFromNumber(randomStringNumber);
+            if (queryDatabase.length === 0) {
+                newSCPNumber = randomStringNumber;
+            }
         }
+        return newSCPNumber;
+    } catch(e) {
+        console.error(e);
     }
-    return newSCPNumber;
 }
 
 function convertNumberToSCPStringNumber(randomNumber) {
@@ -100,14 +104,14 @@ function checkIfSCPIsValid(SCP = null) {
         if (
             typeof SCP.title === "string" && SCP.title.length > 1
             && typeof SCP.class === "string" && SCP.class.length > 1
-        ) return true
+        ) return true;
     } catch (e) {
-        return false
+        return false;
     }
-    return false
+    return false;
 }
 
 module.exports = {
     generateSCP,
     getTweetTextFromSCP
-}
+};

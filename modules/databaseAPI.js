@@ -4,7 +4,7 @@ const SCP_Model = require("../models/SCP.js");
 async function getSCPFromNumber(SCPNumber) {
     const queryDatabase = await SCP_Model.find({
         number: SCPNumber
-    })
+    });
     return queryDatabase;
 }
 
@@ -13,7 +13,7 @@ async function addSCPNumber(SCPNumber) {
         const newSCPNumber = new SCP_Model({
             number: SCPNumber
         });
-        await newSCPNumber.save()
+        await newSCPNumber.save();
     } catch (e) {
         console.error(e);
     }
@@ -22,4 +22,4 @@ async function addSCPNumber(SCPNumber) {
 module.exports = {
     getSCPFromNumber,
     addSCPNumber
-}
+};
