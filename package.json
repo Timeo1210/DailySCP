@@ -1,0 +1,32 @@
+{
+  "name": "dailyscp",
+  "version": "0.1.0",
+  "description": "This is a Twitter Bot (@ScpDaily) that Tweet on a daily basis a SCP story",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "devStart": "npx nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Timeo1210/DailySCP.git"
+  },
+  "author": "Boulhol Timeo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Timeo1210/DailySCP/issues"
+  },
+  "homepage": "https://github.com/Timeo1210/DailySCP#readme",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "form-data": "^3.0.0",
+    "mongoose": "^5.10.9",
+    "puppeteer": "^5.3.1",
+    "qs": "^6.9.4",
+    "uuid": "^8.3.1"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.5"
+  }
+}
