@@ -20,14 +20,14 @@ function readCSVToCSVArray(csvPath) {
     }
 }
 
-function writeCSVFromCSVArray(writeFilePath, contentArray) {
+async function writeCSVFromCSVArray(writeFilePath, contentArray) {
     try {
-        keysOfContent = Object.keys(contentArray);
+        const keysOfContent = Object.keys(contentArray);
         const fileStream = fs.createWriteStream(writeFilePath);
         for (let i = 0; i < keysOfContent.length; i++) {
-            writeToStream(`${keysOfContent[i]},${contentArray[keysOfContent[i]]}\n`, fileStream);
+            await writeToStream(`${keysOfContent[i]},${contentArray[keysOfContent[i]]}\n`, fileStream);
         }
-        fileStream.close();
+        await fileStream.end();
     } catch(e) {
         console.error(e);
     }

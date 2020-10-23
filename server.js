@@ -15,12 +15,14 @@ const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => {
     console.log('Connected to database');
-    /*
-    * DELETE DATABASE
+    
+    /* DELETE DATABASE
     db.dropDatabase((err) => {
-        Initing_Database()
+        console.error(err)
     })
     */
+    
+    
 });
 
 
@@ -36,14 +38,22 @@ for (let i = 0; i < allDefaultPathKey.length; i++) {
     }
 }
 
-async function Main() {
+if (process.env.EXECUTE_ONCE_MAIN_WITHOUT_TWEET) {
+    Main(false).then(() => {
+        setTimeout(() => {
+            process.exit(0)
+        }, 1000)
+    })
+}
+
+async function Main(tweet = true) {
     
     console.log("---GET SCP---");
     const SCPArray = FileAPI.readCSVToCSVArray(process.env.NEXTSCP_FILEPATH);
     const SCP = FileAPI.convertCSVArrayToCSVObject(SCPArray);
     
     console.log("---TWEET SCP---");
-    await TwitterAPI.postTweet(SCP);
+    if (tweet) await TwitterAPI.postTweet(SCP);
 
     console.log("---SCRAP NEXTSCP---");
     const newSCP = await GenerateSCP.generateSCP();
@@ -52,15 +62,17 @@ async function Main() {
         const newMediaId = await TwitterAPI.postImage(process.env.NEXTSCP_IMAGE_BIN_FILEPATH);
         newSCP.imgURL = newMediaId;
     }
-    FileAPI.writeCSVFromCSVArray(process.env.NEXTSCP_FILEPATH, newSCP);
+    await FileAPI.writeCSVFromCSVArray(process.env.NEXTSCP_FILEPATH, newSCP);
 
     console.log("---END---");
 }
 
 var mainWasExecuted = false;
+const loopHour = process.env.LOOP_EXECUTE_HOUR || 20;
+const loopMinute = process.env.LOOP_EXECUTE_MINUTE || 0;
 setInterval(async () => {
-    const date = new Date();
-    if (date.getHours() === 20 && date.getMinutes() === 0) {
+    const date = new Date(); 
+    if (date.getHours() === loopHour && date.getMinutes() === loopMinute) {
         if (!mainWasExecuted) {
             Main();
             mainWasExecuted = true;

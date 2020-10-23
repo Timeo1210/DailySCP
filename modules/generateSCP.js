@@ -11,7 +11,7 @@ async function generateSCP() {
         const SCPNumber = await generateSCPNumber();
 
         await DatabaseAPI.addSCPNumber(SCPNumber);
-        FileAPI.writeToStream(`${SCPNumber}\n`, backupFileStream);
+        await FileAPI.writeToStream(`${SCPNumber}\n`, backupFileStream);
 
         const url = getURLFromSCPNumber(SCPNumber);
         SCP = await Scrap.scrapSCPfromURL(url);
@@ -19,7 +19,7 @@ async function generateSCP() {
         isSCPValid = checkIfSCPIsValid(SCP);
     }
 
-    backupFileStream.end();
+    await backupFileStream.end();
 
     // TO OPTIMISE
     if (SCP.imgURL.length > 1) {
