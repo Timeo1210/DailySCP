@@ -38,12 +38,12 @@ for (let i = 0; i < allDefaultPathKey.length; i++) {
     }
 }
 
-if (process.env.EXECUTE_ONCE_MAIN_WITHOUT_TWEET) {
+if (process.env.EXECUTE_ONCE_MAIN_WITHOUT_TWEET === "true") {
     Main(false).then(() => {
         setTimeout(() => {
             process.exit(0)
         }, 1000)
-    })
+    });
 }
 
 async function Main(tweet = true) {
@@ -68,8 +68,8 @@ async function Main(tweet = true) {
 }
 
 var mainWasExecuted = false;
-const loopHour = process.env.LOOP_EXECUTE_HOUR || 20;
-const loopMinute = process.env.LOOP_EXECUTE_MINUTE || 0;
+const loopHour = parseInt(process.env.LOOP_EXECUTE_HOUR) || 20;
+const loopMinute = parseInt(process.env.LOOP_EXECUTE_MINUTE) || 0;
 setInterval(async () => {
     const date = new Date(); 
     if (date.getHours() === loopHour && date.getMinutes() === loopMinute) {
