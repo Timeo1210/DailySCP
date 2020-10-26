@@ -12,6 +12,9 @@ with %ROOT% corresponding of your project folder (%ROOT% is handle by the app an
 
 ## Environment Variables
 DATABASE_URL={YOUR_DATABASE_URL_HERE}
+LOOP_EXECUTE_HOUR={HOUR_FOR_THE_BOT_TO_TWEET}
+LOOP_EXECUTE_MINUTE={MINUTE_FOR_THE_BOT_TO_TWEET}
+EXECUTE_ONCE_MAIN_WITHOUT_TWEET={GENERATE_NEXTSCP_WITHOUT_TWEET}
 BACKUP_DATABASE_FILEPATH={YOUR_BACKUP_OF_DATABASE_FILEPATH_HERE}
 NEXTSCP_FILEPATH={YOUR_NEXTSCP_FILEPATH_HERE}
 NEXTSCP_IMAGE_FILEPATH={YOUR_NEXTSCP_IMAGE_FILEPATH_HERE}
@@ -24,3 +27,5 @@ TWITTER_API_ACCESS_TOKEN_SECRET={YOUR_TWITTER_API_ACCESS_TOKEN_SECRET_HERE}
   
 The chrome executable path is refering of the path of chrome.exe, for me (windows 10) it was:  
 C:/Users/{ME}/AppData/Roaming/npm/node_modules/puppeteer/.local-chromium/win64-800071/chrome-win/chrome.exe
+for linux it was:  
+/usr/bin/chromium-browser
