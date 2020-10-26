@@ -27,3 +27,5 @@ TWITTER_API_ACCESS_TOKEN_SECRET={YOUR_TWITTER_API_ACCESS_TOKEN_SECRET_HERE}
   
 The chrome executable path is refering of the path of chrome.exe, for me (windows 10) it was:  
 C:/Users/{ME}/AppData/Roaming/npm/node_modules/puppeteer/.local-chromium/win64-800071/chrome-win/chrome.exe
+for linux it was:  
+/usr/bin/chromium-browser

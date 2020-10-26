@@ -2,9 +2,13 @@ const puppeteer = require('puppeteer');
 
 async function scrapSCPfromURL(url) {
     try {
-        const browser = await puppeteer.launch({
-            executablePath: process.env.CHROME_EXECUTABLE_PATH
-        });
+        const launchBrowserParams = {
+            args: ['--no-sandbox']
+        };
+        if (process.env.CHROME_EXECUTABLE_PATH !== undefined) {
+            launchBrowserParams.executablePath = process.env.CHROME_EXECUTABLE_PATH
+        }
+        const browser = await puppeteer.launch(launchBrowserParams);
         const {page, SCPContentDOM} = await getPageAndSCPContentDOM(browser, url);
         
         const [ SCPTitle, SCPClass, SCPImageURL ] = await Promise.all([
