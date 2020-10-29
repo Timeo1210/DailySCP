@@ -71,7 +71,7 @@ async function generateSCPNumber() {
     try {
         let newSCPNumber = null;
         while (newSCPNumber === null) {
-            const randomNumber = Math.floor(Math.random() * (6000 - 2) + 2);
+            const randomNumber = Math.floor(Math.random() * (1000 - 2) + 2);
             const randomStringNumber = convertNumberToSCPStringNumber(randomNumber);
             const queryDatabase = await DatabaseAPI.getSCPFromNumber(randomStringNumber);
             if (queryDatabase.length === 0) {

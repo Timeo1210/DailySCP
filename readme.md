@@ -1,6 +1,6 @@
 # Daily SCP
 This is a Twitter Bot (@ScpDaily) that Tweet on a daily basis a SCP story
-It will Tweet every day at 20.00pm a new SCP with her name, class, an image (if there is one) and the url of the wiki page.
+It will Tweet every day at 20.00pm a new SCP (only the first 1K ones) with her name, class, an image (if there is one) and the url of the wiki page.
 https://twitter.com/ScpDaily
 
 ## Necessary file (will be automatically created)
@@ -12,6 +12,7 @@ with %ROOT% corresponding of your project folder (%ROOT% is handle by the app an
 
 ## Environment Variables
 DATABASE_URL={YOUR_DATABASE_URL_HERE}
+CLEAR_DATABASE={IF_YOU_WANT_TO_CLEAR_DATABASE}
 LOOP_EXECUTE_HOUR={HOUR_FOR_THE_BOT_TO_TWEET}
 LOOP_EXECUTE_MINUTE={MINUTE_FOR_THE_BOT_TO_TWEET}
 EXECUTE_ONCE_MAIN_WITHOUT_TWEET={GENERATE_NEXTSCP_WITHOUT_TWEET}
