@@ -15,13 +15,12 @@ const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => {
     console.log('Connected to database');
-    
-    /* DELETE DATABASE
-    db.dropDatabase((err) => {
-        console.error(err)
-    })
-    */
-    
+    if (process.env.CLEAR_DATABASE) {
+        /* DELETE DATABASE */
+        db.dropDatabase((err) => {
+            console.error(err)
+        })
+    }
     
 });
 
@@ -31,12 +30,16 @@ const FileAPI = require(__dirname + '/modules/fileAPI.js');
 const GenerateSCP = require(__dirname + "/modules/generateSCP.js");
 
 // LOAD ENV FILE PATH
+let executeMainFalsyOnce = false;
 for (let i = 0; i < allDefaultPathKey.length; i++) {
     process.env[allDefaultPathKey[i]] = FileAPI.convertDefaultPathToFinalPath(process.env[allDefaultPathKey[i]]);
     if (!FileAPI.checkIfFileExist(process.env[allDefaultPathKey[i]])) {
         FileAPI.writeToFile(process.env[allDefaultPathKey[i]], "", "wx");
+        executeMainFalsyOnce = true;
     }
 }
+
+if (executeMainFalsyOnce) Main(false)
 
 if (process.env.EXECUTE_ONCE_MAIN_WITHOUT_TWEET === "true") {
     Main(false).then(() => {
