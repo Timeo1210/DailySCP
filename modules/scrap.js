@@ -92,6 +92,7 @@ async function getTextLiFromListURL(page, listURL, SCPInt) {
     if (SCPInt >= 1000) {
         SCPInt = SCPInt - (Math.trunc(SCPInt/1000) * 1000);
     }
+    await page.setDefaultNavigationTimeout(0); 
     await page.goto(listURL);
     await page.waitForSelector('#page-content');
 
@@ -114,6 +115,7 @@ async function getTextLiFromListURL(page, listURL, SCPInt) {
 
 async function getPageAndSCPContentDOM(browser, url) {
     const page = await browser.newPage();
+    await page.setDefaultNavigationTimeout(0); 
     await page.goto(url);
     await page.waitForSelector('#page-content')
 
